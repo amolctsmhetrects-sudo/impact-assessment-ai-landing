@@ -1,0 +1,164 @@
+{
+  "data_source_name": "drug_dev_set1",
+  "data_source_status": "Y",
+  "description": "Drug Development Clinical Trials - Landing Ingestion Set 1",
+  "parallel_job_limit": "10",
+  "notifications": {
+    "success": [
+      "test@novartis.net"
+    ],
+    "failure": [
+      "test@novartis.net"
+    ]
+  },
+  "cluster": {
+    "cluster_type": "",
+    "cluster_name": "",
+    "configuration": {
+      "spark_version": "",
+      "node_type": "",
+      "aws_attributes": {
+        "availability": "",
+        "zone_id": "",
+        "instance_profile_arn": ""
+      },
+      "auto_scale": {
+        "min_workers": "2",
+        "max_workers": "4"
+      },
+      "spark_configuration": {}
+    }
+  },
+  "jobs": [
+    {
+      "job_name": "drug_studies",
+      "schedule": "0 2 * * *",
+      "data_quality_check": "Y",
+      "job_type": "HIST",
+      "tag_params": {},
+      "individual_job_params": {
+        "destination_data_path": "/mnt/landing/drug_dev/drug_studies",
+        "query": "SELECT study_id, study_code, study_title, study_phase, therapeutic_area, indication, drug_name, molecule_type, sponsor_name, study_status, study_start_date, study_end_date, target_enrollment, actual_enrollment, protocol_version, created_date, modified_date FROM rdbms_source.drug_studies",
+        "landing_table_name": "drug_studies",
+        "application": "drug_dev"
+      }
+    },
+    {
+      "job_name": "study_country",
+      "schedule": "0 2 * * *",
+      "data_quality_check": "Y",
+      "job_type": "HIST",
+      "tag_params": {},
+      "individual_job_params": {
+        "destination_data_path": "/mnt/landing/drug_dev/study_country",
+        "query": "SELECT study_country_id, study_id, country_code, country_name, regulatory_authority, regulatory_submission_date, regulatory_approval_date, country_status, planned_sites, active_sites, first_patient_in_date, last_patient_out_date, created_date, modified_date FROM rdbms_source.study_country",
+        "landing_table_name": "study_country",
+        "application": "drug_dev"
+      }
+    },
+    {
+      "job_name": "study_site",
+      "schedule": "0 2 * * *",
+      "data_quality_check": "Y",
+      "job_type": "HIST",
+      "tag_params": {},
+      "individual_job_params": {
+        "destination_data_path": "/mnt/landing/drug_dev/study_site",
+        "query": "SELECT study_site_id, study_id, study_country_id, site_number, site_name, principal_investigator, site_address, city, state_province, postal_code, site_status, site_initiation_date, site_closure_date, target_enrollment, actual_enrollment, created_date, modified_date FROM rdbms_source.study_site",
+        "landing_table_name": "study_site",
+        "application": "drug_dev"
+      }
+    },
+    {
+      "job_name": "study_event",
+      "schedule": "0 2 * * *",
+      "data_quality_check": "Y",
+      "job_type": "HIST",
+      "tag_params": {},
+      "individual_job_params": {
+        "destination_data_path": "/mnt/landing/drug_dev/study_event",
+        "query": "SELECT study_event_id, study_id, event_code, event_name, event_category, event_type, planned_date, actual_date, event_status, event_description, event_owner, created_date, modified_date FROM rdbms_source.study_event",
+        "landing_table_name": "study_event",
+        "application": "drug_dev"
+      }
+    },
+    {
+      "job_name": "study_country_event",
+      "schedule": "0 2 * * *",
+      "data_quality_check": "Y",
+      "job_type": "HIST",
+      "tag_params": {},
+      "individual_job_params": {
+        "destination_data_path": "/mnt/landing/drug_dev/study_country_event",
+        "query": "SELECT study_country_event_id, study_id, study_country_id, study_event_id, country_event_code, planned_date, actual_date, event_status, responsible_person, comments, created_date, modified_date FROM rdbms_source.study_country_event",
+        "landing_table_name": "study_country_event",
+        "application": "drug_dev"
+      }
+    },
+    {
+      "job_name": "monitoring_visit",
+      "schedule": "0 2 * * *",
+      "data_quality_check": "Y",
+      "job_type": "HIST",
+      "tag_params": {},
+      "individual_job_params": {
+        "destination_data_path": "/mnt/landing/drug_dev/monitoring_visit",
+        "query": "SELECT monitoring_visit_id, study_id, study_site_id, visit_code, visit_type, visit_status, planned_start_date, planned_end_date, actual_start_date, actual_end_date, monitor_name, visit_report_status, findings_count, critical_findings_count, follow_up_required, visit_notes, created_date, modified_date FROM rdbms_source.monitoring_visit",
+        "landing_table_name": "monitoring_visit",
+        "application": "drug_dev"
+      }
+    },
+    {
+      "job_name": "adverse_event",
+      "schedule": "0 2 * * *",
+      "data_quality_check": "Y",
+      "job_type": "HIST",
+      "tag_params": {},
+      "individual_job_params": {
+        "destination_data_path": "/mnt/landing/drug_dev/adverse_event",
+        "query": "SELECT adverse_event_id, study_id, patient_id, study_site_id, event_term, event_category, severity, seriousness, onset_date, resolution_date, outcome, causality_assessment, action_taken, reporter_type, reported_date, created_date, modified_date FROM rdbms_source.adverse_event",
+        "landing_table_name": "adverse_event",
+        "application": "drug_dev"
+      }
+    },
+    {
+      "job_name": "patient_enrollment",
+      "schedule": "0 2 * * *",
+      "data_quality_check": "Y",
+      "job_type": "HIST",
+      "tag_params": {},
+      "individual_job_params": {
+        "destination_data_path": "/mnt/landing/drug_dev/patient_enrollment",
+        "query": "SELECT patient_id, study_id, study_site_id, patient_number, gender, date_of_birth, age_at_enrollment, race, ethnicity, consent_date, enrollment_date, randomization_date, randomization_group, enrollment_status, withdrawal_date, withdrawal_reason, created_date, modified_date FROM rdbms_source.patient_enrollment",
+        "landing_table_name": "patient_enrollment",
+        "application": "drug_dev"
+      }
+    },
+    {
+      "job_name": "drug_product",
+      "schedule": "0 2 * * *",
+      "data_quality_check": "Y",
+      "job_type": "HIST",
+      "tag_params": {},
+      "individual_job_params": {
+        "destination_data_path": "/mnt/landing/drug_dev/drug_product",
+        "query": "SELECT drug_product_id, study_id, drug_name, dosage_form, strength, strength_unit, route_of_administration, manufacturer_name, batch_number, lot_number, manufacturing_date, expiry_date, storage_conditions, product_status, created_date, modified_date FROM rdbms_source.drug_product",
+        "landing_table_name": "drug_product",
+        "application": "drug_dev"
+      }
+    },
+    {
+      "job_name": "regulatory_submission",
+      "schedule": "0 2 * * *",
+      "data_quality_check": "Y",
+      "job_type": "HIST",
+      "tag_params": {},
+      "individual_job_params": {
+        "destination_data_path": "/mnt/landing/drug_dev/regulatory_submission",
+        "query": "SELECT submission_id, study_id, drug_product_id, submission_type, regulatory_agency, country_code, submission_date, acknowledgment_date, review_status, approval_date, rejection_reason, submission_reference_number, reviewer_name, submission_notes, created_date, modified_date FROM rdbms_source.regulatory_submission",
+        "landing_table_name": "regulatory_submission",
+        "application": "drug_dev"
+      }
+    }
+  ]
+}
